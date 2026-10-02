@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PEMC Attendance</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login" class="login-screen">
+    <div class="login-card">
+      <div class="logo">PEMC</div>
+      <h1>PEMC Attendance</h1>
+      <p>نظام الحضور والانصراف</p>
+      <input id="loginUser" placeholder="اسم المستخدم" value="admin">
+      <input id="loginPass" type="password" placeholder="كلمة المرور" value="1234">
+      <button onclick="login()">دخول</button>
+      <small>النسخة التجريبية: admin / 1234</small>
+    </div>
+  </div>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand">PEMC<br><span>Attendance</span></div>
+      <button class="nav active" onclick="showPage('dashboard',this)">لوحة التحكم</button>
+      <button class="nav" onclick="showPage('attendance',this)">الحضور والانصراف</button>
+      <button class="nav" onclick="showPage('employees',this)">الموظفين</button>
+      <button class="nav" onclick="showPage('reports',this)">التقارير</button>
+      <button class="nav" onclick="showPage('settings',this)">الإعدادات</button>
+      <button class="nav logout" onclick="logout()">خروج</button>
+    </aside>
+
+    <main class="main">
+      <header>
+        <div>
+          <h2 id="pageTitle">لوحة التحكم</h2>
+          <span id="today"></span>
+        </div>
+        <div class="user">👤 Admin</div>
+      </header>
+
+      <section id="dashboard" class="page">
+        <div class="cards">
+          <div class="card"><span>إجمالي الموظفين</span><b id="totalEmployees">0</b></div>
+          <div class="card"><span>حاضر اليوم</span><b id="presentToday">0</b></div>
+          <div class="card"><span>لم يسجل حضور</span><b id="absentToday">0</b></div>
+          <div class="card"><span>منصرف</span><b id="checkedOutToday">0</b></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>آخر تسجيلات اليوم</h3></div>
+          <div id="recentDashboard"></div>
+        </div>
+      </section>
+
+      <section id="attendance" class="page hidden">
+        <div class="panel">
+          <div class="toolbar">
+            <input id="attendanceSearch" placeholder="بحث بالاسم أو الكود" oninput="renderAttendance()">
+            <button onclick="openAttendanceModal()">+ تسجيل حضور</button>
+          </div>
+          <div id="attendanceTable"></div>
+        </div>
+      </section>
+
+      <section id="employees" class="page hidden">
+        <div class="panel">
+          <div class="toolbar">
+            <input id="employeeSearch" placeholder="بحث عن موظف" oninput="renderEmployees()">
+            <button onclick="openEmployeeModal()">+ إضافة موظف</button>
+          </div>
+          <div id="employeesTable"></div>
+        </div>
+      </section>
+
+      <section id="reports" class="page hidden">
+        <div class="panel">
+          <div class="toolbar">
+            <input type="date" id="reportDate" onchange="renderReport()">
+            <button onclick="exportCSV()">تصدير Excel / CSV</button>
+            <button onclick="window.print()">طباعة / PDF</button>
+          </div>
+          <div id="reportTable"></div>
+        </div>
+      </section>
+
+      <section id="settings" class="page hidden">
+        <div class="panel settings">
+          <h3>إعدادات النظام</h3>
+          <label>بداية الدوام <input id="workStart" type="time" value="09:00"></label>
+          <label>نهاية الدوام <input id="workEnd" type="time" value="17:00"></label>
+          <button onclick="saveSettings()">حفظ الإعدادات</button>
+          <button class="danger" onclick="resetData()">مسح بيانات التجربة</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="employeeModal" class="modal hidden">
+    <div class="modal-card">
+      <h3>إضافة موظف</h3>
+      <input id="empCode" placeholder="كود الموظف">
+      <input id="empName" placeholder="اسم الموظف">
+      <input id="empDept" placeholder="القسم / الموقع">
+      <div class="modal-actions">
+        <button onclick="saveEmployee()">حفظ</button>
+        <button class="secondary" onclick="closeModals()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="attendanceModal" class="modal hidden">
+    <div class="modal-card">
+      <h3>تسجيل حضور / انصراف</h3>
+      <select id="attendanceEmployee"></select>
+      <select id="attendanceType">
+        <option value="in">حضور</option>
+        <option value="out">انصراف</option>
+      </select>
+      <div class="modal-actions">
+        <button onclick="saveAttendance()">تسجيل</button>
+        <button class="secondary" onclick="closeModals()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>
